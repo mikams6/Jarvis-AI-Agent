@@ -1,0 +1,8 @@
+# Python environments and generated files
+.venv*/
+__pycache__/
+*.py[cod]
+
+# Local Google Calendar credentials and runtime data
+google_calendar_client.json
+google_calendar_token.json

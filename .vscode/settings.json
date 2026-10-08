@@ -1,0 +1,10 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "python.defaultInterpreterPath": "${workspaceFolder}\\.venv-native\\Scripts\\python.exe",
+    "terminal.integrated.env.windows": {
+        "PATH": "${workspaceFolder}\\.venv-native\\Scripts;${env:PATH}"
+    },
+    "code-runner.executorMap": {
+        "python": "\"$workspaceRoot/.venv-native/Scripts/pythonw.exe\""
+    }
+}
