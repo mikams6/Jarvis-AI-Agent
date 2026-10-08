@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import uuid
+from collections.abc import Mapping
 from difflib import SequenceMatcher, unified_diff
 import io
 import json
@@ -1240,6 +1241,7 @@ def get_calendar_schedule_for_date(date_text: str = "") -> str:
 
     try:
         from google.auth.transport.requests import Request
+        from google.auth.exceptions import RefreshError
         from google.oauth2.credentials import Credentials
         from google_auth_oauthlib.flow import InstalledAppFlow
         from googleapiclient.discovery import build
@@ -1255,7 +1257,16 @@ def get_calendar_schedule_for_date(date_text: str = "") -> str:
             credentials = None
 
         if credentials and credentials.expired and credentials.refresh_token:
-            credentials.refresh(Request())
+            try:
+                credentials.refresh(Request())
+            except RefreshError as error:
+                response_data = error.args[1] if len(error.args) > 1 else None
+                if (
+                    not isinstance(response_data, Mapping)
+                    or response_data.get("error") != "invalid_grant"
+                ):
+                    raise
+                credentials = None
 
         if not credentials or not credentials.valid:
             flow = InstalledAppFlow.from_client_secrets_file(
